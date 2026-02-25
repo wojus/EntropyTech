@@ -1,0 +1,62 @@
+﻿Specyfikacja Architektoniczna: Entropy Tech (GTCEu Modern 1.20.1)
+1. Wizja Projektu
+Entropy Tech to rozszerzenie (addon) do moda GregTech Community Edition Unofficial (GTCEu) Modern dla wersji Minecraft 1.20.1. Mod wprowadza zaawansowany system termodynamiki voxelowej, w którym ciepło jest fizyczną wielkością przepływającą między blokami (Heat Diffusion), a nie tylko statyczną wartością wewnątrz maszyn.
+2. Główna Mechanika: Heat Storage & Transfer
+System opiera się na systemie Forge Capabilities i wymianie energii cieplnej opartej na różnicy temperatur (  ).
+A. Capability: IHeatStorage
+Każdy blok przewodzący ciepło musi implementować ten interfejs:
+* long getTemperature(): Zwraca aktualną temperaturę w Kelvinach skalowaną x100 (np. 30015 = 300.15K).
+* void setTemperature(long temp): Ustawia temperaturę.
+* long getHeatCapacity(): Pojemność cieplna (J/K) – określa, jak trudno jest nagrzać dany blok.
+* long getThermalConductivity(): Współczynnik    (W/m·K).
+B. Fizyka Transferu
+Przepływ ciepła (  ) między dwoma blokami obliczany jest co tick (lub co interwał):
+
+
+  
+Gdzie    to oporność styku, a    to średnia przewodność materiałów.
+3. Maszyna: Stirling Kinetic Generator (LV - EV)
+Maszyna różnicowa konwertująca gradient temperatur na energię elektryczną (EU).
+A. Architektura Blokowa (Sides)
+   * NORTH (Hot Side): Kontakt ze źródłem ciepła (np. Kocioł, Piec).
+   * SOUTH (Cold Side): Kontakt z układem chłodzenia (np. Radiator, Woda).
+   * FRONT (Output): Wyjście energii EU do sieci GregTech.
+B. Logika Operacyjna
+   1. Obliczenie Gradientu:   .
+   2. Sprawność Carnota:   .
+   3. Mnożnik Tieru: LV (0.3), MV (0.5), HV (0.7).
+   4. Generacja:   .
+   5. Straty (Waste Heat): 10% energii cieplnej ze strony gorącej musi "przeciekać" na stronę zimną, symulując straty izolacji.
+4. Tabela Przewodności Materiałów (  )
+Materiał (GT Material)
+	Przewodność k (W/m·K)
+	Max Temp (K)
+	Zastosowanie
+	Miedź (Copper)
+	401
+	1358
+	Rury, kable, niskie tiery
+	Aluminium
+	237
+	933
+	Radiatory, obudowy
+	Stal Nierdzewna
+	15
+	1783
+	Izolatory, obudowy reaktorów
+	Wolfram (Tungsten)
+	173
+	3695
+	Ekstremalne wymienniki
+	Naquadah
+	850
+	8000
+	Technologie ZPM+
+	5. Wytyczne Implementacyjne (Java / GTCEu)
+      * Klasy Bazowe: Należy rozszerzać com.gregtechceu.gtceu.api.machine.ReadyMachine.
+      * Rejestracja: Używać GTRegistries.MACHINES.
+      * Optymalizacja: Synchronizacja temperatur do klienta (S2C) tylko przy zmianie większej niż 1K lub co 20 ticków.
+      * Bezpieczeństwo: Jeśli    materiału, maszyna powinna ulec zniszczeniu (eksplozja lub zamiana w blok "Melted Machine").
+6. Prompt dla Modelu Lokalnego (DeepSeek/Qwen)
+Użyj tego promptu, aby wygenerować bazowy kod:
+"Wygeneruj interface IHeatStorage oraz klasę StirlingGeneratorTileEntity dla Minecraft 1.20.1 Forge z użyciem API GTCEu Modern. Implementacja musi uwzględniać dwa oddzielne bufory ciepła (Hot/Cold) zapisywane w NBT, logikę generowania EU opartą na różnicy temperatur oraz mechanizm odprowadzania ciepła odpadowego."

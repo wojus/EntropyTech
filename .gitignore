@@ -1,26 +1,36 @@
-build/
-*.ipr
-run/
-*.iws
-out/
-*.iml
+# gradle
+
 .gradle/
-output/
-bin/
-libs/
-
-.classpath
-*/.factorypath
-.project
-.idea/
+build/
+out/
 classes/
-.metadata
-.vscode
-.settings
-*.launch
-.architectury-transformer/debug.log
-src/generated/resources/.cache/
 
-*.patch
+# eclipse
+
+*.launch
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+
 *.DS_Store
+
+run/
+run-data/
+/src/generated/resources/.cache/*
+
+# ai
 .continue/
