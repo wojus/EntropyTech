@@ -22,15 +22,15 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(Entropytech.MOD_ID)
+@Mod(EntropyTech.MOD_ID)
 @SuppressWarnings("removal")
-public class Entropytech {
+public class EntropyTech {
 
     public static final String MOD_ID = "entropytech";
     public static final Logger LOGGER = LogManager.getLogger();
-    public static GTRegistrate EXAMPLE_REGISTRATE = GTRegistrate.create(Entropytech.MOD_ID);
+    public static GTRegistrate EXAMPLE_REGISTRATE = GTRegistrate.create(EntropyTech.MOD_ID);
 
-    public Entropytech() {
+    public EntropyTech() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modEventBus.addListener(this::commonSetup);
@@ -81,7 +81,7 @@ public class Entropytech {
      * @param event
      */
     private void addMaterialRegistries(MaterialRegistryEvent event) {
-        GTCEuAPI.materialManager.createRegistry(Entropytech.MOD_ID);
+        GTCEuAPI.materialManager.createRegistry(EntropyTech.MOD_ID);
     }
 
     /**
